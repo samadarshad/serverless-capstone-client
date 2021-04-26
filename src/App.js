@@ -4,22 +4,9 @@ import { Route } from 'react-router-dom'
 import { useHistory } from "react-router-dom";
 import Join from './components/Join/Join'
 import Chat from './components/Chat/Chat'
+import ChatApi from './api/chat-api'
 
-import Sockette from 'sockette'
-const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
-
-// const socket = io(ENDPOINT)
-
-const ws = new Sockette(ENDPOINT, {
-    timeout: 5e3,
-    maxAttempts: 10,
-    onopen: e => console.log('Connected!', e),
-    onmessage: e => console.log('Received:', e),
-    onreconnect: e => console.log('Reconnecting...', e),
-    onmaximum: e => console.log('Stop Attempting!', e),
-    onclose: e => console.log('Closed!', e),
-    onerror: e => console.log('Error:', e)
-});
+const chatApi = new ChatApi((e) => console.log('Received:', e))
 
 const App = () => {
     const [name, setName] = useState('')
