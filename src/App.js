@@ -16,7 +16,16 @@ const App = () => {
 
     let history = useHistory();
 
-    chatApi.sendMessageToRoom("sup")
+
+
+    useEffect(() => {
+        async function connectToChat() {
+            await chatApi.connect()
+            console.log("now sending msg");
+            chatApi.sendMessageToRoom("sup")
+        }
+        connectToChat()
+    }, [])
 
     // useEffect(() => {
     //     socket.on('message', (message) => {
