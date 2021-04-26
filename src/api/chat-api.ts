@@ -18,7 +18,10 @@ class ChatApi {
                     console.log('Connected!', e)
                     resolve('connected')
                 },
-                onmessage: e => console.log('Received:', e),
+                onmessage: e => {
+                    // console.log('Received:', e)
+                    this.onMessage(e)
+                },
                 onreconnect: e => console.log('Reconnecting...', e),
                 onmaximum: e => console.log('Stop Attempting!', e),
                 onclose: e => console.log('Closed!', e),
