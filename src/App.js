@@ -2,14 +2,24 @@ import React, { useState, useEffect } from 'react'
 import io from 'socket.io-client'
 import { Route } from 'react-router-dom'
 import { useHistory } from "react-router-dom";
-
 import Join from './components/Join/Join'
 import Chat from './components/Chat/Chat'
 
+import Sockette from 'sockette'
+const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
 
-const ENDPOINT = process.env.REACT_APP_ENDPOINT || `localhost:5000`
+// const socket = io(ENDPOINT)
 
-const socket = io(ENDPOINT)
+const ws = new Sockette(ENDPOINT, {
+    timeout: 5e3,
+    maxAttempts: 10,
+    onopen: e => console.log('Connected!', e),
+    onmessage: e => console.log('Received:', e),
+    onreconnect: e => console.log('Reconnecting...', e),
+    onmaximum: e => console.log('Stop Attempting!', e),
+    onclose: e => console.log('Closed!', e),
+    onerror: e => console.log('Error:', e)
+});
 
 const App = () => {
     const [name, setName] = useState('')
@@ -19,45 +29,45 @@ const App = () => {
 
     let history = useHistory();
 
-    useEffect(() => {
-        socket.on('message', (message) => {
-            setMessages(messages => [...messages, message])
-        })
+    // useEffect(() => {
+    //     socket.on('message', (message) => {
+    //         setMessages(messages => [...messages, message])
+    //     })
 
-        // socket.on('roomData', ({ users }) => {
-        //     setUsers(users)
-        // })
+    //     // socket.on('roomData', ({ users }) => {
+    //     //     setUsers(users)
+    //     // })
 
-        socket.on('allUsers', ({ users }) => {
-            setUsers(users)
-            console.log("allUsers", users);
-        })
+    //     socket.on('allUsers', ({ users }) => {
+    //         setUsers(users)
+    //         console.log("allUsers", users);
+    //     })
 
-        joinLobby()
+    //     joinLobby()
 
-    }, [])
+    // }, [])
 
-    function joinLobby() {
-        socket.emit('onLobby')
-    }
+    // function joinLobby() {
+    //     socket.emit('onLobby')
+    // }
 
 
-    function signIn({ name, room }) {
-        socket.emit('join', { name, room }, (error) => {
-            if (error) {
-                alert(error)
-            } else {
-                setName(name)
-                setRoom(room)
-                history.push('/chat')
-            }
-        })
-    }
+    // function signIn({ name, room }) {
+    //     socket.emit('join', { name, room }, (error) => {
+    //         if (error) {
+    //             alert(error)
+    //         } else {
+    //             setName(name)
+    //             setRoom(room)
+    //             history.push('/chat')
+    //         }
+    //     })
+    // }
 
     return (
         <>
-            <Route path="/" exact render={() => <Join signIn={signIn} users={users} />} />
-            <Route path="/chat" render={() => <Chat socket={socket} name={name} room={room} messages={messages} users={users} />} />
+            {/* <Route path="/" exact render={() => <Join signIn={signIn} users={users} />} /> */}
+            {/* <Route path="/chat" render={() => <Chat socket={socket} name={name} room={room} messages={messages} users={users} />} /> */}
         </>
     )
 }
