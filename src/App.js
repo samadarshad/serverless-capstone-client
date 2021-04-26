@@ -6,7 +6,7 @@ import Join from './components/Join/Join'
 import Chat from './components/Chat/Chat'
 import ChatApi from './api/chat-api'
 
-
+let chatApi
 
 const App = () => {
     const [name, setName] = useState('')
@@ -17,30 +17,31 @@ const App = () => {
     let history = useHistory();
 
     function addMessage(newMessage) {
-        console.log("new msg", newMessage);
-        setMessages((prevMessages) => ([
-            ...prevMessages,
-            newMessage
-        ]))
-
+        setMessages(messages => [...messages, newMessage])
     }
 
-    const chatApi = new ChatApi((e) => {
-        const msg = JSON.parse(e.data).message
-        console.log('Received message:', msg)
+    async function connectToChat() {
+        await chatApi.connect()
+        console.log("now sending msg");
+        chatApi.sendMessageToRoom("sup")
+    }
 
-        addMessage(msg)
-    })
 
     useEffect(() => {
-        async function connectToChat() {
-            await chatApi.connect()
-            console.log("now sending msg");
-            chatApi.sendMessageToRoom("sup")
-        }
+        chatApi = new ChatApi((e) => {
+            const msg = JSON.parse(e.data).message
+            console.log('Received message:', msg)
+            addMessage(msg)
+        })
+
         connectToChat()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    const sendMessage = (message) => {
+        // chatApi.test()
+        chatApi.sendMessageToRoom(message)
+    }
 
     useEffect(() => {
         console.log('messages:', JSON.stringify(messages, null, 2))
@@ -87,7 +88,8 @@ const App = () => {
                 <li>{message}</li>)
             }
             {/* <Route path="/" exact render={() => <Join signIn={signIn} users={users} />} /> */}
-            {/* <Route path="/chat" render={() => <Chat socket={socket} name={name} room={room} messages={messages} users={users} />} /> */}
+            {/* <Route path="/chat" render={() => <Chat sendMessage={(msg) => chatApi.sendMessageToRoom(msg)} name={name} room={room} messages={messages} users={users} />} /> */}
+            <Chat sendMessage={(message) => sendMessage(message)} name={name} room={room} messages={messages} users={users} />
         </>
     )
 }

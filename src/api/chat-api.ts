@@ -4,6 +4,7 @@ const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
 class ChatApi {
     onMessage: (e: Event) => void
     ws!: Sockette
+    // socket!: WebSocket
 
     constructor(onMessage: (e: Event) => void) {
         this.onMessage = onMessage;
@@ -11,6 +12,11 @@ class ChatApi {
 
     connect() {
         return new Promise(resolve => {
+            // this.socket = new WebSocket(ENDPOINT)
+
+            // this.socket.addEventListener('open', () => resolve('connected'))
+            // this.socket.addEventListener('message', (e) => this.onMessage(e))
+
             this.ws = new Sockette(ENDPOINT, {
                 timeout: 5e3,
                 maxAttempts: 10,
@@ -27,6 +33,8 @@ class ChatApi {
                 onclose: e => console.log('Closed!', e),
                 onerror: e => console.log('Error:', e)
             });
+            console.log("ws: ", this.ws);
+
         })
     }
 
@@ -38,9 +46,17 @@ class ChatApi {
 
     }
 
+    test() {
+        console.log("ws", this.ws);
+    }
+
     sendMessageToRoom(message: string) {
+        console.log("sending message to room", message);
+        console.log("ws", this.ws);
+
         const payload = { "action": "onMessage", "message": message }
         this.ws.json(payload)
+        // this.socket.send(JSON.stringify(payload))
     }
 
 
