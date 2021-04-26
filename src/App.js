@@ -16,6 +16,8 @@ const App = () => {
 
     let history = useHistory();
 
+    chatApi.sendMessageToRoom("sup")
+
     // useEffect(() => {
     //     socket.on('message', (message) => {
     //         setMessages(messages => [...messages, message])

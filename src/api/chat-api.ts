@@ -19,6 +19,21 @@ class ChatApi {
             onerror: e => console.log('Error:', e)
         });
     }
+
+    joinLobby() {
+
+    }
+
+    joinRoom() {
+
+    }
+
+    sendMessageToRoom(message: string) {
+        const payload = { "action": "onMessage", "message": message }
+        this.ws.send(JSON.stringify(payload))
+    }
+
+
 }
 
 export default ChatApi
