@@ -55,8 +55,8 @@ class ChatApi {
         //     if (error) {
         //         alert(error)
         //     } else {
-        //         setName(name)
-        //         setRoom(room)
+        // setName(joiningInfo.name)
+        // setRoom(joiningInfo.room)
         //         history.push('/chat')
         //     }
         // })
@@ -72,6 +72,7 @@ class ChatApi {
 
         const payload = { "action": "onMessage", "message": message }
         this.ws.json(payload)
+
         // this.socket.send(JSON.stringify(payload))
     }
 

@@ -78,8 +78,8 @@ const App = () => {
         //     if (error) {
         //         alert(error)
         //     } else {
-        //         setName(name)
-        //         setRoom(room)
+        setName(name)
+        setRoom(room)
         //         history.push('/chat')
         //     }
         // })
