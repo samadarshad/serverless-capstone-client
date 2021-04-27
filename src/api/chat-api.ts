@@ -1,6 +1,11 @@
 import Sockette from 'sockette';
 const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
 
+interface JoinRoom {
+    name: string
+    room: string
+}
+
 class ChatApi {
     onMessage: (e: Event) => void
     ws!: Sockette
@@ -38,12 +43,23 @@ class ChatApi {
         })
     }
 
-    joinLobby() {
 
-    }
 
-    joinRoom() {
+    joinRoom(joiningInfo: JoinRoom) {
 
+        console.log("joinRoom in as", joiningInfo,);
+
+        const payload = { "action": "onJoin", ...joiningInfo }
+        this.ws.json(payload)
+        // socket.emit('join', { name, room }, (error) => {
+        //     if (error) {
+        //         alert(error)
+        //     } else {
+        //         setName(name)
+        //         setRoom(room)
+        //         history.push('/chat')
+        //     }
+        // })
     }
 
     test() {

@@ -32,7 +32,7 @@ const App = () => {
     useEffect(() => {
         connectToChat()
 
-        setName("bob")
+        setName("i23wz")
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -67,21 +67,27 @@ const App = () => {
     // }
 
 
-    // function signIn({ name, room }) {
-    //     socket.emit('join', { name, room }, (error) => {
-    //         if (error) {
-    //             alert(error)
-    //         } else {
-    //             setName(name)
-    //             setRoom(room)
-    //             history.push('/chat')
-    //         }
-    //     })
-    // }
+    function signIn({ name, room }) {
+        // console.log("signing in as", name, room);
+        const joiningInfo = {
+            name,
+            room
+        }
+        chatApi.joinRoom(joiningInfo)
+        // socket.emit('join', { name, room }, (error) => {
+        //     if (error) {
+        //         alert(error)
+        //     } else {
+        //         setName(name)
+        //         setRoom(room)
+        //         history.push('/chat')
+        //     }
+        // })
+    }
 
     return (
         <>
-            {/* <Route path="/" exact render={() => <Join signIn={signIn} users={users} />} /> */}
+            <Route path="/" exact render={() => <Join signIn={(d) => signIn(d)} users={users} />} />
             {/* <Route path="/chat" render={() => <Chat sendMessage={(msg) => chatApi.sendMessageToRoom(msg)} name={name} room={room} messages={messages} users={users} />} /> */}
             <Chat sendMessage={(message) => sendMessage(message)} name={name} room={room} messages={messages} users={users} />
         </>
