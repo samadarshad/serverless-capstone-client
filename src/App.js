@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import io from 'socket.io-client'
 import { Route } from 'react-router-dom'
 import { useHistory } from "react-router-dom";
 import Join from './components/Join/Join'
@@ -21,25 +20,23 @@ const App = () => {
     }
 
     async function connectToChat() {
+        chatApi = new ChatApi((e) => {
+            const msg = JSON.parse(e.data)
+            console.log('Received message:', msg)
+            addMessage(msg)
+        })
         await chatApi.connect()
-        console.log("now sending msg");
-        chatApi.sendMessageToRoom("sup")
     }
 
 
     useEffect(() => {
-        chatApi = new ChatApi((e) => {
-            const msg = JSON.parse(e.data).message
-            console.log('Received message:', msg)
-            addMessage(msg)
-        })
-
         connectToChat()
+
+        setName("bob")
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const sendMessage = (message) => {
-        // chatApi.test()
         chatApi.sendMessageToRoom(message)
     }
 
@@ -84,9 +81,6 @@ const App = () => {
 
     return (
         <>
-            {messages.map((message) =>
-                <li>{message}</li>)
-            }
             {/* <Route path="/" exact render={() => <Join signIn={signIn} users={users} />} /> */}
             {/* <Route path="/chat" render={() => <Chat sendMessage={(msg) => chatApi.sendMessageToRoom(msg)} name={name} room={room} messages={messages} users={users} />} /> */}
             <Chat sendMessage={(message) => sendMessage(message)} name={name} room={room} messages={messages} users={users} />

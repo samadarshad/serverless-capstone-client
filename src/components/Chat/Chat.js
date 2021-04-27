@@ -19,7 +19,6 @@ const Chat = ({ sendMessage, name, room, messages, users }) => {
         event.preventDefault()
 
         if (message) {
-            console.log("pressed send button with message", message);
             sendMessage(message)
             setMessage('')
         }
