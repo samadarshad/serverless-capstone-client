@@ -66,11 +66,11 @@ class ChatApi {
         console.log("ws", this.ws);
     }
 
-    sendMessageToRoom(message: string) {
-        console.log("sending message to room", message);
+    sendMessageToRoom(message: string, room: string) {
+        console.log("sending message to room", message, room);
         console.log("ws", this.ws);
 
-        const payload = { "action": "onMessage", "message": message }
+        const payload = { "action": "onMessage", message, room }
         this.ws.json(payload)
 
         // this.socket.send(JSON.stringify(payload))

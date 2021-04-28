@@ -4,6 +4,10 @@ import { useHistory } from "react-router-dom";
 import Join from './components/Join/Join'
 import Chat from './components/Chat/Chat'
 import ChatApi from './api/chat-api'
+import Message from './components/Message/Message';
+import { createCheckers } from "ts-interface-checker";
+import MessageTypeTI from "../../../requests/generated/MessageType-ti";
+const { MessageType } = createCheckers(MessageTypeTI)
 
 let chatApi
 
@@ -23,7 +27,9 @@ const App = () => {
         chatApi = new ChatApi((e) => {
             const msg = JSON.parse(e.data)
             console.log('Received message:', msg)
-            addMessage(msg)
+            if (MessageType.test(msg)) {
+                addMessage(msg)
+            }
         })
         await chatApi.connect()
     }
@@ -37,7 +43,7 @@ const App = () => {
     }, [])
 
     const sendMessage = (message) => {
-        chatApi.sendMessageToRoom(message)
+        chatApi.sendMessageToRoom(message, room)
     }
 
     useEffect(() => {
