@@ -10,7 +10,6 @@ interface JoinRoom {
 class ChatApi {
     onMessage: (e: Event) => void
     ws!: Sockette
-    // socket!: WebSocket
 
     constructor(onMessage: (e: Event) => void) {
         this.onMessage = onMessage;
@@ -18,11 +17,6 @@ class ChatApi {
 
     connect() {
         return new Promise(resolve => {
-            // this.socket = new WebSocket(ENDPOINT)
-
-            // this.socket.addEventListener('open', () => resolve('connected'))
-            // this.socket.addEventListener('message', (e) => this.onMessage(e))
-
             this.ws = new Sockette(URL, {
                 timeout: 5e3,
                 maxAttempts: 10,
@@ -31,7 +25,6 @@ class ChatApi {
                     resolve('connected')
                 },
                 onmessage: e => {
-                    // console.log('Received:', e)
                     this.onMessage(e)
                 },
                 onreconnect: e => console.log('Reconnecting...', e),
@@ -44,40 +37,24 @@ class ChatApi {
         })
     }
 
-
-
     joinRoom(joiningInfo: JoinRoom) {
-
-        console.log("joinRoom in as", joiningInfo,);
-
-        const payload = { "action": "onJoin", ...joiningInfo }
+        const payload = {
+            action: "onJoin",
+            ...joiningInfo
+        }
         this.ws.json(payload)
-        // socket.emit('join', { name, room }, (error) => {
-        //     if (error) {
-        //         alert(error)
-        //     } else {
-        // setName(joiningInfo.name)
-        // setRoom(joiningInfo.room)
-        //         history.push('/chat')
-        //     }
-        // })
     }
 
-    test() {
-        console.log("ws", this.ws);
-    }
 
     sendMessageToRoom(message: string, room: string) {
-        console.log("sending message to room", message, room);
-        console.log("ws", this.ws);
+        const payload = {
+            action: "onMessage",
+            subAction: "send",
+            message,
+            room
+        }
 
-        const payload = { "action": "onMessage", message, room }
         this.ws.json(payload)
-
-        // this.socket.send(JSON.stringify(payload))
     }
-
-
 }
-
 export default ChatApi

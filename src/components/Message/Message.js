@@ -3,7 +3,7 @@ import ReactEmoji from 'react-emoji'
 
 import './Message.css'
 
-const Message = ({ messageItem: { name, message }, myName }) => {
+const Message = ({ messageItem: { name, message }, myName, deleteMessage }) => {
     let isSendByCurrentUser = false
 
     const trimmedName = myName.trim().toLowerCase()
@@ -20,6 +20,7 @@ const Message = ({ messageItem: { name, message }, myName }) => {
                     <div className="messageBox backgroundBlue">
                         <p className="messageText colorWhite">{ReactEmoji.emojify(message)}</p>
                     </div>
+                    <button onClick={(e) => console.log(e)}>Delete</button>
                 </div>
             )
             : (
