@@ -6,7 +6,7 @@ import Chat from './components/Chat/Chat'
 import ChatApi from './api/chat-api'
 import Message from './components/Message/Message';
 import { createCheckers } from "ts-interface-checker";
-import MessageTypeTI from "../../../requests/generated/MessageType-ti";
+import MessageTypeTI from "./models/generated/MessageType-ti";
 const { MessageType } = createCheckers(MessageTypeTI)
 
 let chatApi
@@ -28,6 +28,7 @@ const App = () => {
             const msg = JSON.parse(e.data)
             console.log('Received message:', msg)
             if (MessageType.test(msg)) {
+                console.log('Received message of MessageType')
                 addMessage(msg)
             }
         })

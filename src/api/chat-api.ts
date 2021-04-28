@@ -1,6 +1,7 @@
 import Sockette from 'sockette';
 const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
-
+const TOKEN = "2" //TODO make token from auth
+const URL = `${ENDPOINT}?token=${TOKEN}`
 interface JoinRoom {
     name: string
     room: string
@@ -22,7 +23,7 @@ class ChatApi {
             // this.socket.addEventListener('open', () => resolve('connected'))
             // this.socket.addEventListener('message', (e) => this.onMessage(e))
 
-            this.ws = new Sockette(ENDPOINT, {
+            this.ws = new Sockette(URL, {
                 timeout: 5e3,
                 maxAttempts: 10,
                 onopen: e => {

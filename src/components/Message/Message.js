@@ -3,12 +3,12 @@ import ReactEmoji from 'react-emoji'
 
 import './Message.css'
 
-const Message = ({ message: { user, text }, name }) => {
+const Message = ({ messageItem: { name, message }, myName }) => {
     let isSendByCurrentUser = false
 
-    const trimmedName = name.trim().toLowerCase()
+    const trimmedName = myName.trim().toLowerCase()
 
-    if (user === trimmedName) {
+    if (name === trimmedName) {
         isSendByCurrentUser = true
     }
 
@@ -18,7 +18,7 @@ const Message = ({ message: { user, text }, name }) => {
                 <div className="messageContainer justifyEnd">
                     <p className="sentText pr-10">{trimmedName}</p>
                     <div className="messageBox backgroundBlue">
-                        <p className="messageText colorWhite">{ReactEmoji.emojify(text)}</p>
+                        <p className="messageText colorWhite">{ReactEmoji.emojify(message)}</p>
                     </div>
                 </div>
             )
@@ -26,9 +26,9 @@ const Message = ({ message: { user, text }, name }) => {
                 <div className="messageContainer justifyStart">
 
                     <div className="messageBox backgroundLight">
-                        <p className="messageText colorDark">{ReactEmoji.emojify(text)}</p>
+                        <p className="messageText colorDark">{ReactEmoji.emojify(message)}</p>
                     </div>
-                    <p className="sentText pl-10">{user}</p>
+                    <p className="sentText pl-10">{name}</p>
                 </div>
             )
     )
