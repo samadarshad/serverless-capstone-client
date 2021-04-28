@@ -56,5 +56,17 @@ class ChatApi {
 
         this.ws.json(payload)
     }
+
+    deleteMessage(userId: string, postedAt: string, room: string) {
+        const payload = {
+            action: "onMessage",
+            subAction: "delete",
+            userId,
+            postedAt,
+            room
+        }
+
+        this.ws.json(payload)
+    }
 }
 export default ChatApi

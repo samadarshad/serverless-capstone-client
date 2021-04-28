@@ -20,7 +20,7 @@ const Message = ({ messageItem: { name, message }, myName, deleteMessage }) => {
                     <div className="messageBox backgroundBlue">
                         <p className="messageText colorWhite">{ReactEmoji.emojify(message)}</p>
                     </div>
-                    <button onClick={(e) => console.log(e)}>Delete</button>
+                    <button onClick={() => deleteMessage()}>Delete</button>
                 </div>
             )
             : (

@@ -1,6 +1,7 @@
 export interface MessageType {
-    name: string
+    name?: string
+    userId: string
     room: string
-    message: string
+    message?: string
     postedAt: string
 }

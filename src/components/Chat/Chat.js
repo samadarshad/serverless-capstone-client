@@ -5,7 +5,7 @@ import Input from '../Input/Input'
 import Messages from '../Messages/Messages'
 import TextContainer from '../TextContainer/TextContainer'
 
-const Chat = ({ sendMessage, name, room, messages, users }) => {
+const Chat = ({ sendMessage, name, room, messages, users, deleteMessage }) => {
     const [message, setMessage] = useState('')
 
     // useEffect(() => {
@@ -28,7 +28,7 @@ const Chat = ({ sendMessage, name, room, messages, users }) => {
         <div className="outerContainer">
             <div className="container">
                 {/* <InfoBar room={room} /> */}
-                <Messages messages={messages} name={name} />
+                <Messages messages={messages} name={name} deleteMessage={deleteMessage} />
                 <Input message={message} setMessage={setMessage} send={send} />
             </div>
             {/* <TextContainer users={users} /> */}
