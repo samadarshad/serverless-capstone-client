@@ -30,6 +30,8 @@ const App = () => {
             if (MessageType.test(msg)) {
                 console.log('Received message of MessageType')
                 addMessage(msg)
+            } else {
+                console.log('Error! Did not recieve MessageType')
             }
         })
         await chatApi.connect()
