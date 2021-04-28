@@ -25,16 +25,36 @@ const App = () => {
         setMessages(messages => [...messages, newMessage])
     }
 
+    function handleMessageAction(message: MessageType) {
+        switch (message.subAction) {
+            case "send":
+                addMessage(message)
+                break
+            case "delete":
+                console.log("need to delete message", message);
+                break
+            default:
+                console.log("unknown subaction");
+                break
+
+        }
+    }
+
+    function handleLobbyAction() { }
+
+    function handleAction(action: string) {
+        if (MessageTypeChecker.test(action)) {
+            handleMessageAction(action)
+        } else {
+            console.log('Did not recieve MessageType')
+        }
+    }
+
     async function connectToChat() {
         chatApi = new ChatApi((e) => {
             const msg = JSON.parse(e.data)
             console.log('Received message:', msg)
-            if (MessageTypeChecker.test(msg)) {
-                console.log('Received message of MessageType')
-                addMessage(msg)
-            } else {
-                console.log('Error! Did not recieve MessageType')
-            }
+            handleAction(msg)
         })
         await chatApi.connect()
     }

@@ -4,4 +4,5 @@ export interface MessageType {
     room: string
     message?: string
     postedAt: string
+    subAction?: string
 }
