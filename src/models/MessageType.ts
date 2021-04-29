@@ -5,5 +5,4 @@ export interface MessageType {
     message?: string
     postedAt: string
     subAction?: string
-    deleteMessage?: boolean
 }
