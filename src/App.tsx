@@ -31,7 +31,7 @@ const App = () => {
                 addMessage(message)
                 break
             case "delete":
-                console.log("need to delete message", message);
+                console.log("need to set delete boolean on message", message);
                 break
             default:
                 console.log("unknown subaction");
@@ -42,9 +42,9 @@ const App = () => {
 
     function handleLobbyAction() { }
 
-    function handleAction(action: string) {
-        if (MessageTypeChecker.test(action)) {
-            handleMessageAction(action)
+    function handleMessageEvent(msg) {
+        if (MessageTypeChecker.test(msg)) {
+            handleMessageAction(msg)
         } else {
             console.log('Did not recieve MessageType')
         }
@@ -52,9 +52,11 @@ const App = () => {
 
     async function connectToChat() {
         chatApi = new ChatApi((e) => {
+            console.log('Message!', e);
+
             const msg = JSON.parse(e.data)
             console.log('Received message:', msg)
-            handleAction(msg)
+            handleMessageEvent(msg)
         })
         await chatApi.connect()
     }

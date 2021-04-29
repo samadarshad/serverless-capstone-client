@@ -3,7 +3,8 @@ import ReactEmoji from 'react-emoji'
 
 import './Message.css'
 
-const Message = ({ messageItem: { name, message }, myName, deleteMessage }) => {
+const Message = ({ messageItem, myName, deleteMessage }) => {
+    const { name, message } = messageItem
     let isSendByCurrentUser = false
 
     const trimmedName = myName.trim().toLowerCase()

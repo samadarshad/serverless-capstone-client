@@ -8,10 +8,10 @@ interface JoinRoom {
 }
 
 class ChatApi {
-    onMessage: (e: Event) => void
+    onMessage: (e: MessageEvent) => void
     ws!: Sockette
 
-    constructor(onMessage: (e: Event) => void) {
+    constructor(onMessage: (e: MessageEvent) => void) {
         this.onMessage = onMessage;
     }
 

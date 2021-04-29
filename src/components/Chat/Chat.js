@@ -16,6 +16,7 @@ const Chat = ({ sendMessage, name, room, messages, users, deleteMessage }) => {
     // }, [socket])
 
     const send = (event) => {
+        console.log("sending");
         event.preventDefault()
 
         if (message) {
