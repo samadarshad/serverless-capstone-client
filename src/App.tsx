@@ -16,13 +16,41 @@ let chatApi: ChatApi
 const App = () => {
     const [name, setName] = useState('')
     const [room, setRoom] = useState('')
+    const [action, setAction] = useState('')
     const [messages, setMessages] = useState<MessageType[]>([])
     const [users, setUsers] = useState([])
 
     let history = useHistory();
 
+
+    useEffect(() => {
+
+        handleMessageEvent(action)
+
+    }, [action])
+
     function addMessage(newMessage: MessageType) {
         setMessages(messages => [...messages, newMessage])
+    }
+
+    const messageEquals = (a: MessageType, b: MessageType) => {
+        console.log("postedAt", a.postedAt);
+        console.log("postedAt", b.postedAt);
+        console.log("postedAt", a.postedAt === b.postedAt);
+        console.log("userId", a.userId === b.userId);
+        console.log("room", a.room === b.room);
+
+        return ((a.postedAt === b.postedAt) && (a.userId === b.userId) && (a.room === b.room))
+    }
+
+    const updateMessage = (updatingMessage: MessageType) => {
+        console.log("updating message", updatingMessage);
+        console.log("from messages: ", messages);
+
+        const index = messages.findIndex((m) => messageEquals(m, updatingMessage))
+        console.log("index", index);
+        console.log("selected msg:", messages[index]);
+
     }
 
     function handleMessageAction(message: MessageType) {
@@ -31,7 +59,7 @@ const App = () => {
                 addMessage(message)
                 break
             case "delete":
-                console.log("need to set delete boolean on message", message);
+                updateMessage(message)
                 break
             default:
                 console.log("unknown subaction");
@@ -56,7 +84,8 @@ const App = () => {
 
             const msg = JSON.parse(e.data)
             console.log('Received message:', msg)
-            handleMessageEvent(msg)
+            setAction(msg)
+            // handleMessageEvent(msg)
         })
         await chatApi.connect()
     }
