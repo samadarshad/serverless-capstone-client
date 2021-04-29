@@ -20,7 +20,12 @@ const currentUserMessage = (message, deleteMessage) => (
         <div className="messageBox backgroundBlue">
             <p className="messageText colorWhite">{displayMessage(message)}</p>
         </div>
-        <button onClick={() => deleteMessage()}>Delete</button>
+        {(message.subAction !== "delete") ?
+            <button onClick={() => deleteMessage()}>Delete</button>
+            :
+            null
+        }
+
     </div>
 )
 

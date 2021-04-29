@@ -34,23 +34,17 @@ const App = () => {
     }
 
     const messageEquals = (a: MessageType, b: MessageType) => {
-        console.log("postedAt", a.postedAt);
-        console.log("postedAt", b.postedAt);
-        console.log("postedAt", a.postedAt === b.postedAt);
-        console.log("userId", a.userId === b.userId);
-        console.log("room", a.room === b.room);
-
         return ((a.postedAt === b.postedAt) && (a.userId === b.userId) && (a.room === b.room))
     }
 
-    const updateMessage = (updatingMessage: MessageType) => {
-        console.log("updating message", updatingMessage);
-        console.log("from messages: ", messages);
-
-        const index = messages.findIndex((m) => messageEquals(m, updatingMessage))
-        console.log("index", index);
+    const updateMessage = (newMessage: MessageType) => {
+        const index = messages.findIndex((m) => messageEquals(m, newMessage))
         console.log("selected msg:", messages[index]);
 
+        let updatedMessages = [...messages]
+        updatedMessages[index] = newMessage
+
+        setMessages(updatedMessages)
     }
 
     function handleMessageAction(message: MessageType) {
