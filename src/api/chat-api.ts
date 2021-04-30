@@ -1,21 +1,22 @@
 import Sockette from 'sockette';
+import { JoinRoomType } from '../models/JoinRoomType';
 const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
-const TOKEN = "2" //TODO make token from auth
-const URL = `${ENDPOINT}?token=${TOKEN}`
-interface JoinRoom {
-    name: string
-    room: string
-}
+// const TOKEN = "2" //TODO make token from auth
+// const URL = `${ENDPOINT}?token=${TOKEN}`
+
 
 class ChatApi {
     onMessage: (e: MessageEvent) => void
+    accessToken
     ws!: Sockette
 
-    constructor(onMessage: (e: MessageEvent) => void) {
+    constructor(onMessage: (e: MessageEvent) => void, accessToken: string) {
         this.onMessage = onMessage;
+        this.accessToken = accessToken
     }
 
     connect() {
+        const URL = `${ENDPOINT}?token=${this.accessToken}`
         return new Promise(resolve => {
             this.ws = new Sockette(URL, {
                 timeout: 5e3,
@@ -37,7 +38,7 @@ class ChatApi {
         })
     }
 
-    joinRoom(joiningInfo: JoinRoom) {
+    joinRoom(joiningInfo: JoinRoomType) {
         const payload = {
             action: "onJoin",
             ...joiningInfo

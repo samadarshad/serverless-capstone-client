@@ -86,20 +86,28 @@ const App = () => {
     }
 
     async function connectToChat() {
-        chatApi = new ChatApi((e) => {
+        const onMessageEvent = (e: MessageEvent) => {
             console.log('Message!', e);
 
             const msg = JSON.parse(e.data)
             console.log('Received message:', msg)
             setAction(msg)
-        })
+        }
+        const domain = "samadarshad.eu.auth0.com";
+        const accessToken = await getAccessTokenSilently({
+            audience: `https://${domain}/api/v2/`
+        });
+
+        chatApi = new ChatApi(onMessageEvent, accessToken)
         await chatApi.connect()
     }
 
     useEffect(() => {
-        connectToChat()
+        if (isAuthenticated) {
+            connectToChat()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [isAuthenticated])
 
     const sendMessage = (message: string) => {
         chatApi.sendMessageToRoom(message, room)
@@ -113,16 +121,26 @@ const App = () => {
         chatApi.deleteMessage(message.userId, message.postedAt, message.room)
     }
 
-    function signIn({ name, room }: JoinRoomType) {
-        const joiningInfo = {
-            name,
-            room
-        }
-        chatApi.joinRoom(joiningInfo)
-        setName(name)
-        setRoom(room)
+    function signIn(joiningInfo: JoinRoomType) {
+        setName(joiningInfo.name)
+        setRoom(joiningInfo.room)
         history.push('/chat')
     }
+
+    const joinRoom = async () => {
+        chatApi.joinRoom({
+            name,
+            room
+        })
+    };
+
+    useEffect(() => {
+        if (name && room) {
+
+            joinRoom();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [name]);
 
     return (
         <>
