@@ -136,7 +136,6 @@ const App = () => {
 
     useEffect(() => {
         if (name && room) {
-
             joinRoom();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
