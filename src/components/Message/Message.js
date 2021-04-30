@@ -3,14 +3,11 @@ import ReactEmoji from 'react-emoji'
 
 import './Message.css'
 
-const displayMessage = ({ message, subAction }) => {
-    switch (subAction) {
-        case "send":
-            return ReactEmoji.emojify(message)
-        case "delete":
-            return <i>Message has been deleted.</i>
-        default:
-            return null
+const displayMessage = ({ message, isDeleted }) => {
+    if (isDeleted) {
+        return <i>Message has been deleted.</i>
+    } else {
+        return ReactEmoji.emojify(message)
     }
 }
 
@@ -20,7 +17,7 @@ const currentUserMessage = (message, deleteMessage) => (
         <div className="messageBox backgroundBlue">
             <p className="messageText colorWhite">{displayMessage(message)}</p>
         </div>
-        {(message.subAction !== "delete") ?
+        {(!message.isDeleted) ?
             <button onClick={() => deleteMessage()}>Delete</button>
             :
             null

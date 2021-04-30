@@ -48,17 +48,10 @@ const App = () => {
     }
 
     function handleMessageAction(message: MessageType) {
-        switch (message.subAction) {
-            case "send":
-                addMessage(message)
-                break
-            case "delete":
-                updateMessage(message)
-                break
-            default:
-                console.log("unknown subaction");
-                break
-
+        if (message.isDeleted) {
+            updateMessage(message)
+        } else {
+            addMessage(message)
         }
     }
 

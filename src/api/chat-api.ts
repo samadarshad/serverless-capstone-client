@@ -49,7 +49,6 @@ class ChatApi {
     sendMessageToRoom(message: string, room: string) {
         const payload = {
             action: "onMessage",
-            subAction: "send",
             message,
             room
         }
@@ -60,7 +59,7 @@ class ChatApi {
     deleteMessage(userId: string, postedAt: string, room: string) {
         const payload = {
             action: "onMessage",
-            subAction: "delete",
+            isDeleted: true,
             userId,
             postedAt,
             room
