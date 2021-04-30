@@ -10,6 +10,7 @@ ReactDOM.render(
             domain="samadarshad.eu.auth0.com"
             clientId="VOJMJzaEytuFfdhvlzNf8GUwX5LSLZCv"
             redirectUri={window.location.origin}
+            audience="https://samadarshad.eu.auth0.com/api/v2/"
         >
             <App />
         </Auth0Provider>,

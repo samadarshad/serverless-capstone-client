@@ -9,15 +9,38 @@ import { createCheckers } from "ts-interface-checker";
 import MessageTypeTI from "./models/generated/MessageType-ti";
 import { MessageType } from './models/MessageType';
 import { JoinRoomType } from './models/JoinRoomType';
+import { useAuth0 } from "@auth0/auth0-react";
+
+import './App.css'
+
 const { MessageType: MessageTypeChecker } = createCheckers(MessageTypeTI)
 
+
+
 let chatApi: ChatApi
+
+const LoginButton = () => {
+    const { loginWithRedirect } = useAuth0();
+
+    return <button className="button" onClick={() => loginWithRedirect()}>Log In</button>;
+};
+
+const LogoutButton = () => {
+    const { logout } = useAuth0();
+
+    return (
+        <button className="button mt-20" onClick={() => logout({ returnTo: window.location.origin })}>
+            Log Out
+        </button>
+    );
+};
 
 const App = () => {
     const [name, setName] = useState('')
     const [room, setRoom] = useState('')
     const [action, setAction] = useState('')
     const [messages, setMessages] = useState<MessageType[]>([])
+    const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
     let history = useHistory();
 
@@ -103,8 +126,28 @@ const App = () => {
 
     return (
         <>
-            <Route path="/" exact render={() => <Join signIn={(d: JoinRoomType) => signIn(d)} />} />
-            <Route path="/chat" render={() => <Chat sendMessage={(text: string) => sendMessage(text)} name={name} room={room} messages={messages} deleteMessage={deleteMessage} />} />
+            {!isAuthenticated ?
+                <>
+                    <div className="joinOuterContainer">
+                        <div className="joinInnerContainer">
+                            <h1 className="heading">Chat App</h1>
+                            < LoginButton />
+                        </div>
+                    </div>
+
+                </>
+                :
+                <>
+                    <div className="appOuterContainer">
+                        <div className="appInnerContainer">
+                            < LogoutButton />
+                        </div>
+                    </div>
+
+                    <Route path="/" exact render={() => <Join signIn={(d: JoinRoomType) => signIn(d)} />} />
+                    <Route path="/chat" render={() => <Chat sendMessage={(text: string) => sendMessage(text)} name={name} room={room} messages={messages} deleteMessage={deleteMessage} />} />
+                </>
+            }
         </>
     )
 }

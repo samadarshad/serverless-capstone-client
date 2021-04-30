@@ -1,0 +1,11 @@
+.appOuterContainer {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    background-color: #1a1a1d;
+}
+
+.appInnerContainer {
+    width: 20%;
+}
