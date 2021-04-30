@@ -5,4 +5,5 @@ export interface MessageType {
     message?: string
     postedAt: string
     isDeleted?: boolean
+    modifiedAt?: string
 }
