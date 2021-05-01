@@ -123,7 +123,6 @@ const App = () => {
 
     function signIn(room) {
         setRoom(room)
-        history.push('/chat')
     }
 
     const joinRoom = async () => {
@@ -131,6 +130,8 @@ const App = () => {
             name: user.nickname,
             room
         })
+
+        history.push('/chat')
     };
 
     useEffect(() => {
