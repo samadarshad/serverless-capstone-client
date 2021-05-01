@@ -47,11 +47,12 @@ class ChatApi {
     }
 
 
-    sendMessageToRoom(message: string, room: string) {
+    sendMessageToRoom(message: string, room: string, name: string) {
         const payload = {
             action: "onMessage",
             message,
-            room
+            room,
+            name
         }
 
         this.ws.json(payload)

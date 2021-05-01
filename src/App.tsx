@@ -113,7 +113,7 @@ const App = () => {
     }, [isAuthenticated])
 
     const sendMessage = (message: string) => {
-        chatApi.sendMessageToRoom(message, room)
+        chatApi.sendMessageToRoom(message, room, name)
     }
 
     useEffect(() => {
@@ -144,6 +144,11 @@ const App = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [name]);
 
+    useEffect(() => {
+        console.log("user:", user);
+
+    }, [user]);
+
     return (
         <>
             {!isAuthenticated ?
@@ -165,7 +170,7 @@ const App = () => {
                     </div>
 
                     <Route path="/" exact render={() => <Join signIn={(d: JoinRoomType) => signIn(d)} />} />
-                    <Route path="/chat" render={() => <Chat sendMessage={(text: string) => sendMessage(text)} name={name} room={room} messages={messages} deleteMessage={deleteMessage} />} />
+                    <Route path="/chat" render={() => <Chat sendMessage={(text: string) => sendMessage(text)} myUserId={user.sub} room={room} messages={messages} deleteMessage={deleteMessage} />} />
                 </>
             }
         </>

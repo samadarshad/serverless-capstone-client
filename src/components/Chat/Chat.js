@@ -4,7 +4,7 @@ import InfoBar from '../InfoBar/InfoBar'
 import Input from '../Input/Input'
 import Messages from '../Messages/Messages'
 
-const Chat = ({ sendMessage, name, room, messages, deleteMessage }) => {
+const Chat = ({ sendMessage, myUserId, room, messages, deleteMessage }) => {
     const [message, setMessage] = useState('')
 
     const send = (event) => {
@@ -20,7 +20,7 @@ const Chat = ({ sendMessage, name, room, messages, deleteMessage }) => {
         <div className="outerContainer">
             <div className="container">
                 <InfoBar room={room} />
-                <Messages messages={messages} name={name} deleteMessage={deleteMessage} />
+                <Messages messages={messages} myUserId={myUserId} deleteMessage={deleteMessage} />
                 <Input message={message} setMessage={setMessage} send={send} />
             </div>
         </div>

@@ -36,12 +36,11 @@ const otherUsersMessage = (message) => (
     </div>
 )
 
-const Message = ({ messageItem, myName, deleteMessage }) => {
+const Message = ({ messageItem, myUserId, deleteMessage }) => {
     let isSendByCurrentUser = false
 
-    const trimmedName = myName.trim().toLowerCase()
 
-    if (messageItem.name === trimmedName) {
+    if (messageItem.userId === myUserId) {
         isSendByCurrentUser = true
     }
 
