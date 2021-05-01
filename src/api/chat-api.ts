@@ -1,8 +1,5 @@
 import Sockette from 'sockette';
 const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
-// const TOKEN = "2" //TODO make token from auth
-// const URL = `${ENDPOINT}?token=${TOKEN}`
-
 
 class ChatApi {
     onMessage: (e: MessageEvent) => void
