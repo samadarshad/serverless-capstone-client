@@ -133,6 +133,7 @@ const App = () => {
         console.log("joining", ws);
 
         ws?.json(payload)
+        setRoom(room)
 
         history.push('/chat')
     }
@@ -171,8 +172,6 @@ const App = () => {
     }, [isAuthenticated])
 
     function signIn(room) {
-        setRoom(room)
-
         if (isAuthenticated && room) {
             joinRoom(room);
         }
