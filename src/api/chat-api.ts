@@ -1,5 +1,4 @@
 import Sockette from 'sockette';
-import { JoinRoomType } from '../models/JoinRoomType';
 const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
 // const TOKEN = "2" //TODO make token from auth
 // const URL = `${ENDPOINT}?token=${TOKEN}`
@@ -38,7 +37,7 @@ class ChatApi {
         })
     }
 
-    joinRoom(joiningInfo: JoinRoomType) {
+    joinRoom(joiningInfo) {
         const payload = {
             action: "onJoin",
             ...joiningInfo

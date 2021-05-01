@@ -36,7 +36,6 @@ const LogoutButton = () => {
 };
 
 const App = () => {
-    const [name, setName] = useState('')
     const [room, setRoom] = useState('')
     const [action, setAction] = useState('')
     const [messages, setMessages] = useState<MessageType[]>([])
@@ -113,7 +112,7 @@ const App = () => {
     }, [isAuthenticated])
 
     const sendMessage = (message: string) => {
-        chatApi.sendMessageToRoom(message, room, name)
+        chatApi.sendMessageToRoom(message, room, user.nickname)
     }
 
     useEffect(() => {
@@ -124,30 +123,25 @@ const App = () => {
         chatApi.deleteMessage(message.userId, message.postedAt, message.room)
     }
 
-    function signIn(joiningInfo: JoinRoomType) {
-        setName(joiningInfo.name)
-        setRoom(joiningInfo.room)
+    function signIn(room) {
+        setRoom(room)
         history.push('/chat')
     }
 
     const joinRoom = async () => {
         chatApi.joinRoom({
-            name,
+            name: user.nickname,
             room
         })
     };
 
     useEffect(() => {
-        if (name && room) {
+        if (isAuthenticated && room) {
             joinRoom();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [name]);
+    }, [room]);
 
-    useEffect(() => {
-        console.log("user:", user);
-
-    }, [user]);
 
     return (
         <>
@@ -169,7 +163,7 @@ const App = () => {
                         </div>
                     </div>
 
-                    <Route path="/" exact render={() => <Join signIn={(d: JoinRoomType) => signIn(d)} />} />
+                    <Route path="/" exact render={() => <Join nickname={user.nickname} signIn={(room) => signIn(room)} />} />
                     <Route path="/chat" render={() => <Chat sendMessage={(text: string) => sendMessage(text)} myUserId={user.sub} room={room} messages={messages} deleteMessage={deleteMessage} />} />
                 </>
             }
