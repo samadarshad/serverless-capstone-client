@@ -6,7 +6,7 @@ const Join = ({ signIn, nickname }) => {
     const [room, setRoom] = useState('')
 
     function joinRoom(event) {
-        if (room) {
+        if (room !== '') {
             event.preventDefault()
             signIn(room)
         }

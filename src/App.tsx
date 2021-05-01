@@ -3,19 +3,17 @@ import { Route } from 'react-router-dom'
 import { useHistory } from "react-router-dom";
 import Join from './components/Join/Join'
 import Chat from './components/Chat/Chat'
-import ChatApi from './api/chat-api'
 import { createCheckers } from "ts-interface-checker";
 import MessageTypeTI from "./models/generated/MessageType-ti";
 import { MessageType } from './models/MessageType';
 import { useAuth0 } from "@auth0/auth0-react";
-
 import './App.css'
 
+import Sockette from 'sockette';
+// const ENDPOINT = process.env.REACT_APP_ENDPOINT || `ws://localhost:3001`
+const ENDPOINT = `wss://jyvmqrh1c5.execute-api.eu-west-2.amazonaws.com/dev`
+
 const { MessageType: MessageTypeChecker } = createCheckers(MessageTypeTI)
-
-
-
-let chatApi: ChatApi
 
 const LoginButton = () => {
     const { loginWithRedirect } = useAuth0();
@@ -38,8 +36,49 @@ const App = () => {
     const [action, setAction] = useState('')
     const [messages, setMessages] = useState<MessageType[]>([])
     const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+    const [ws, setWs] = useState<Sockette>()
 
     let history = useHistory();
+
+
+    const connect = async () => {
+
+        const onMessageEvent = (e: MessageEvent) => {
+            console.log('Message!', e);
+
+            const msg = JSON.parse(e.data)
+            console.log('Received message:', msg)
+            setAction(msg)
+        }
+
+        const domain = "samadarshad.eu.auth0.com";
+        const accessToken = await getAccessTokenSilently({
+            audience: `https://${domain}/api/v2/`
+        });
+
+        const URL = `${ENDPOINT}?token=${accessToken}`
+        let newWs
+        await new Promise(resolve => {
+            newWs = new Sockette(URL, {
+                timeout: 5e3,
+                maxAttempts: 10,
+                onopen: e => {
+                    console.log('Connected!', e)
+                    resolve('connected')
+                },
+                onmessage: e => {
+                    onMessageEvent(e)
+                },
+                onreconnect: e => console.log('Reconnecting...', e),
+                onmaximum: e => console.log('Stop Attempting!', e),
+                onclose: e => console.log('Closed!', e),
+                onerror: e => console.log('Error:', e)
+            });
+            console.log("ws: ", newWs);
+
+        })
+        setWs(newWs)
+    }
 
     useEffect(() => {
         handleMessageEvent(action)
@@ -85,61 +124,81 @@ const App = () => {
         }
     }
 
-    async function connectToChat() {
-        const onMessageEvent = (e: MessageEvent) => {
-            console.log('Message!', e);
-
-            const msg = JSON.parse(e.data)
-            console.log('Received message:', msg)
-            setAction(msg)
+    const joinRoom = (room) => {
+        const payload = {
+            action: "onJoin",
+            room,
+            name: user.nickname
         }
-        const domain = "samadarshad.eu.auth0.com";
-        const accessToken = await getAccessTokenSilently({
-            audience: `https://${domain}/api/v2/`
-        });
+        console.log("joining", ws);
 
-        chatApi = new ChatApi(onMessageEvent, accessToken)
-        await chatApi.connect()
+        ws?.json(payload)
+
+        history.push('/chat')
+    }
+
+
+    const sendMessage = (message: string) => {
+        const payload = {
+            action: "onMessage",
+            message,
+            room,
+            name: user.nickname
+        }
+
+        ws?.json(payload)
+    }
+
+    const deleteMessage = ({ userId, postedAt, room }) => {
+        const payload = {
+            action: "onMessage",
+            isDeleted: true,
+            userId,
+            postedAt,
+            room
+        }
+
+        ws?.json(payload)
     }
 
     useEffect(() => {
         if (isAuthenticated) {
-            connectToChat()
+            console.log("connecting...");
+            connect()
+            // connectToChat()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated])
 
-    const sendMessage = (message: string) => {
-        chatApi.sendMessageToRoom(message, room, user.nickname)
-    }
-
-    useEffect(() => {
-        console.log('messages:', JSON.stringify(messages, null, 2))
-    }, [messages])
-
-    const deleteMessage = (message: MessageType) => {
-        chatApi.deleteMessage(message.userId, message.postedAt, message.room)
-    }
-
     function signIn(room) {
         setRoom(room)
+
+        if (isAuthenticated && room) {
+            joinRoom(room);
+        }
     }
 
-    const joinRoom = async () => {
-        chatApi.joinRoom({
-            name: user.nickname,
-            room
-        })
 
-        history.push('/chat')
+
+    const leaveRoom = async () => {
+        const payload = {
+            action: "onJoin",
+            room: '_lobby',
+            name: user.nickname
+        }
+        console.log("leaving", ws);
+
+        ws?.json(payload)
+
+
+
+        setMessages([])
+
+        history.push('/')
+
+        setRoom('_lobby')
     };
 
-    useEffect(() => {
-        if (isAuthenticated && room) {
-            joinRoom();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [room]);
 
 
     return (
@@ -163,7 +222,7 @@ const App = () => {
                     </div>
 
                     <Route path="/" exact render={() => <Join nickname={user.nickname} signIn={(room) => signIn(room)} />} />
-                    <Route path="/chat" render={() => <Chat sendMessage={(text: string) => sendMessage(text)} myUserId={user.sub} room={room} messages={messages} deleteMessage={deleteMessage} />} />
+                    <Route path="/chat" render={() => <Chat leaveRoom={leaveRoom} sendMessage={(text: string) => sendMessage(text)} myUserId={user.sub} room={room} messages={messages} deleteMessage={deleteMessage} />} />
                 </>
             }
         </>
