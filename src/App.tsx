@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Route } from 'react-router-dom'
 import { useHistory } from "react-router-dom";
 import Join from './components/Join/Join'
 import Chat from './components/Chat/Chat'
 import ChatApi from './api/chat-api'
-import Message from './components/Message/Message';
 import { createCheckers } from "ts-interface-checker";
 import MessageTypeTI from "./models/generated/MessageType-ti";
 import { MessageType } from './models/MessageType';
-import { JoinRoomType } from './models/JoinRoomType';
 import { useAuth0 } from "@auth0/auth0-react";
 
 import './App.css'

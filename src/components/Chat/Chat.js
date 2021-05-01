@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './Chat.css'
 import InfoBar from '../InfoBar/InfoBar'
 import Input from '../Input/Input'
