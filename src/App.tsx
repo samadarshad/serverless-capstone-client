@@ -65,12 +65,15 @@ const App = () => {
         }
 
         let updatedMessages = [...messages]
-        updatedMessages[index] = newMessage
-        setMessages(updatedMessages)
+        if (newMessage.modifiedAt !== updatedMessages[index].modifiedAt) {
+            updatedMessages[index] = newMessage
+            setMessages(updatedMessages)
+        }
+
     }
 
     function handleMessageAction(message: MessageType) {
-        if (message.isDeleted || message.modifiedAt) {
+        if (message.modifiedAt !== message.postedAt) {
             updateMessage(message)
         } else {
             addMessage(message)
